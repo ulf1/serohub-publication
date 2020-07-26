@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='serohub-publication',
-    version="0.1.0",
+    version="0.2.0",
     description='Find relevant SARS-CoV-2 seroprevalance studies',
     license='MIT',
     author='Ulf Hamster',
@@ -16,7 +16,8 @@ setup(
         'pydrive2==1.4.*'
     ],
     scripts=[
-        'scripts/biorxiv-download.py'
+        'scripts/biorxiv-download.py',
+        'scripts/biorxiv-splitup.py'
     ],
     packages=['serohub_publication'],
 )
