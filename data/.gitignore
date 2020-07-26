@@ -1,3 +1,7 @@
 *.*
 !*.dvc
+
 raw/tmp
+
+!set1/*.txt
+set1/unlabelled
