@@ -26,8 +26,11 @@ python3.6 -m venv .venv
 source .venv/bin/activate
 
 # install this python package
+pip install -r requirements.txt
 python setup.py install
 ```
+
+(Remove package: `pip uninstall serohub-publication`)
 
 ### Notes for Windows
 Assuming that [python 3.6](https://www.python.org/downloads/windows/) is installed in `C:\Python\Python36`:
@@ -54,20 +57,26 @@ git commit .dvc/config -m "My remote storage configuration for Google Drive"
 dvc push
 ```
 
-### Add Data Files to DVC
-Example
+### Add a new Dataset folder to DVC
 
 ```bash
-dvc add data/raw/biorxiv.json
-git add data/raw/biorxiv.json.dvc
+dvc add data/set123
+git add data/set123.dvc
+
 dvc push
+git commit -m "dataset updated"
+git push
 ```
 
 ## Scripts
 
 ### Download new raw files and update DVC
+```bash
+source .venv/bin/activate
+bash download.sh
+```
 
-Windows
+**Notes for Windows**
 
 ```
 .venv\Scripts\activate.bat
