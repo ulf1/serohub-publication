@@ -2,7 +2,8 @@
 from datetime import datetime as dt
 import os
 import json
-from serohub_publication.biorxiv import to_front_matter
+import serohub_publication.biorxiv as sp_biorxiv
+import serohub_publication.crossref as sp_crossref
 import argparse
 
 # NOTES
@@ -43,16 +44,16 @@ if __name__ == "__main__":
 
                 # process depending on the raw data source
                 frontmatter_content = None
-                if RAWSRC == "biorxiv":
+                if RAWSRC in ("biorxiv", "crossref"):
                     doc_filepath = os.path.join(
                         args.RAWDATAPATH, RAWSRC, FILENAME)
                     with open(doc_filepath, "r") as fptr2:
                         doc = json.load(fptr2)
-                        # generate and save front matter
-                        frontmatter_content = to_front_matter(doc)
-
+                # generate and save front matter
+                if RAWSRC == "biorxiv":
+                    frontmatter_content = sp_biorxiv.to_front_matter(doc)
                 elif RAWSRC == "crossref":
-                    pass  # not implemented yet
+                    frontmatter_content = sp_crossref.to_front_matter(doc)
                 else:
                     print(f"[INFO] {dt.now()}: Cannot find '{RAWSRC}' source")
 

@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='serohub-publication',
-    version="0.4.1",
+    version="0.4.2",
     description='Find relevant SARS-CoV-2 seroprevalance studies',
     license='MIT',
     author='Ulf Hamster',
