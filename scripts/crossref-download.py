@@ -49,9 +49,8 @@ if __name__ == "__main__":
     # Search with START DATE (argparse) -> Search Daily!
     filterspecs = {
         'type': 'journal-article', 'has_abstract': 'true',
-        'from_update_date': args.FROM_DATE,
-        'until_update_date':
-        args.TILL_DATE if args.TILL_DATE else args.FROM_DATE
+        'from_pub_date': args.FROM_DATE,
+        'until_pub_date': args.TILL_DATE if args.TILL_DATE else args.FROM_DATE
     }
 
     # fetch
