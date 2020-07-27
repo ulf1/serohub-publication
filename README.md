@@ -82,3 +82,26 @@ bash download.sh
 .venv\Scripts\activate.bat
 download.bat
 ```
+
+# Misc Notes
+
+## Download old CrossRef files
+
+```bash
+RAWPATH="data/raw/crossref"
+for OFFSET in {1..210}
+do
+    FROMDATE=$(date -j -v-${OFFSET}d +%F)
+    crossref-download.py -o ${RAWPATH} -l 1000 -s 20.0 -f ${FROMDATE}
+done
+
+dvc add ${RAWPATH}
+dvc push
+
+OLDBRANCH="$(git rev-parse --abbrev-ref HEAD)"
+git checkout -b old-crossref-papers-downloaded
+git add "${RAWPATH}.dvc"
+git commit -m "updated crossref dvc"
+git push origin old-crossref-papers-downloaded
+git checkout ${OLDBRANCH}
+```
