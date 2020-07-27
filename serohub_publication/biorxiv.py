@@ -1,5 +1,5 @@
 
-def to_jekyll_header(doc: dict) -> str:
+def to_front_matter(doc: dict) -> str:
     """Convert biorxiv example to serohub format
 
     Example:
@@ -14,14 +14,14 @@ def to_jekyll_header(doc: dict) -> str:
 
     # Loop over each article 
     for doc in data['rels']:
-        s = to_jekyll_header(doc)
+        s = to_front_matter(doc)
         FILENAME = f"{doc['rel_doi']}.md"
         with open(os.path.join(FILEPATH, FILENAME), "w") as fptr:
             fptr.write(s)
     """
     names = ', '.join([f"\"{row['author_name']}\"" for row in doc['rel_authors']])
     return f"""+++
-draft = true
+draft = false
 abstract = "{doc['rel_abs']}"
 abstract_short = ""
 authors = [{names}]
@@ -29,7 +29,8 @@ date = "{doc['rel_date']}"
 image = ""
 image_preview = ""
 math = false
-publication = "{doc['rel_site']}"
+publication = ""
+publication_preprint = "{doc['rel_site']}"
 publication_short = ""
 title = "{doc['rel_title']}"
 doi = "{doc['rel_doi']}"

@@ -18,9 +18,6 @@ The section of the website [serohub.netlify.app/en/publication](https://serohub.
 # clone the git repo
 git clone git@github.com:ulf1/serohub-publication.git
 
-# download versionened datasets (dvc)
-dvc pull
-
 # install and activate virtualenv
 python3.6 -m venv .venv
 source .venv/bin/activate
@@ -28,6 +25,9 @@ source .venv/bin/activate
 # install this python package
 pip install -r requirements.txt
 python setup.py install
+
+# download versionened datasets (dvc)
+dvc pull
 ```
 
 (Remove package: `pip uninstall serohub-publication`)
