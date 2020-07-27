@@ -13,6 +13,12 @@ biorxiv-splitup.py -i ${TMPFILE} -o ${RAWPATH}
 dvc add ${RAWPATH}
 git add "${RAWPATH}.dvc"
 
+# CrossRef (limit it to articles published today)
+RAWPATH="data/raw/crossref"
+crossref-download.py -o ${RAWPATH} -l 1000 -s 20.0 -f "$(date +%F)"
+dvc add ${RAWPATH}
+git add "${RAWPATH}.dvc"
+
 # upload files to DVC remote repo
 dvc push
 

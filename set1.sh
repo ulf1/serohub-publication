@@ -8,6 +8,7 @@ git checkout -b ${BRANCHNAME}
 # pull files
 DATASETPATH="data/set1"
 set1-pull-biorxiv.py -d ${DATASETPATH} -r "data/raw/biorxiv"
+set1-pull-crossref.py -d ${DATASETPATH} -r "data/raw/crossref"
 
 # sync files
 set1-sync.py -d ${DATASETPATH}

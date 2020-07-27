@@ -18,3 +18,7 @@ def normalize_string(s: str) -> str:
     s = re.sub(r'[^a-zA-Z0-9.!?]+', r' ', s)  # replace special characters with whitespace
     s = re.sub(r'\s+', r' ', s)
     return s.lower()
+
+
+def remove_html_tags(s):
+    return re.sub(r'<.*?>', '', s)
