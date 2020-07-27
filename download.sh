@@ -23,6 +23,6 @@ git add "${RAWPATH}.dvc"
 dvc push
 
 # commit files
-git commit -m "raw files updated"
+git commit -m "raw files updated $(date +%F)"
 git push origin ${BRANCHNAME}
 git checkout ${OLDBRANCH}

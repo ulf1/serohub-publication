@@ -21,6 +21,6 @@ git add "${DATASETPATH}/1.dvc"
 dvc push
 
 # commit files
-git commit -m "raw files updated"
+git commit -m "data set1 updated $(date +%F)"
 git push origin ${BRANCHNAME}
 git checkout ${OLDBRANCH}
