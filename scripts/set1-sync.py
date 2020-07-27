@@ -31,12 +31,12 @@ if __name__ == "__main__":
     set_filenames = [os.path.basename(s) for s in set_filepaths]
 
     # read all 0-label DOIs
-    with open("data/set1/0.txt", "r") as fptr:
+    with open(os.path.join(args.DATASETPATH, "0.txt"), "r") as fptr:
         doi0 = fptr.readlines()
         files0 = [s.strip().replace("/", "-") + ".json" for s in doi0]
 
     # read all 1-label DOIs
-    with open("data/set1/1.txt", "r") as fptr:
+    with open(os.path.join(args.DATASETPATH, "1.txt"), "r") as fptr:
         doi1 = fptr.readlines()
         files1 = [s.strip().replace("/", "-") + ".json" for s in doi1]
 
