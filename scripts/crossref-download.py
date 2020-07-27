@@ -59,8 +59,8 @@ if __name__ == "__main__":
                     filter=filterspecs)
 
     print((f"[INFO] {dt.now()}: {len(data['message']['items'])} Crossref"
-           f" articles fetched from '{filterspecs['from_update_date']}' till"
-           f" '{filterspecs['until_update_date']}'."))
+           f" articles fetched from '{filterspecs['from_pub_date']}' till"
+           f" '{filterspecs['from_pub_date']}'."))
 
     # Store each paper in seperate JSON file
     cnt = 0
