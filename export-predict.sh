@@ -17,9 +17,9 @@ python model/predict.py
 # sync files in the "predicted" folder
 DATASETPATH="data/set1"
 # delete target folder
-rm "${DATASETPATH}/predicted/unlabelled"
+rm -rf "${DATASETPATH}/predicted/unlabelled"
 # copy unlabelled folder
-cp "${DATASETPATH}/unlabelled" "${DATASETPATH}/predicted/unlabelled"
+cp -R "${DATASETPATH}/unlabelled" "${DATASETPATH}/predicted/unlabelled"
 # sync files
 set1-sync.py -d "${DATASETPATH}/predicted"
 
