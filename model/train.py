@@ -27,7 +27,7 @@ from sklearn.metrics import confusion_matrix, balanced_accuracy_score, classific
 
 
 # misc arguments
-DATASETPATH = "../data/set1"
+DATASETPATH = "data/set1"
 
 MODELPATH = os.path.join(DATASETPATH, "models")
 os.makedirs(MODELPATH, exist_ok=True)
