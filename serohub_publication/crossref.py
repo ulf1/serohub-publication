@@ -16,17 +16,17 @@ def to_front_matter(doc: dict) -> str:
     if len(pubdate) == 2: pubdate.append(1) 
     return f"""+++
 draft = false
-abstract = "{remove_html_tags(unicode_to_ascii(doc['abstract']))}"
+abstract = "{remove_html_tags(unicode_to_ascii(doc['abstract'])).strip('\n')}"
 abstract_short = ""
 authors = [{names}]
 date = "{datetime.date(*pubdate).isoformat()}"
 image = ""
 image_preview = ""
 math = false
-publication = "{doc['container-title']}"
+publication = "{doc['container-title'][0]}"
 publication_preprint = ""
 publication_short = ""
-title = "{remove_html_tags(unicode_to_ascii(doc['title'][0]))}"
+title = "{remove_html_tags(unicode_to_ascii(doc['title'][0])).strip('\n')}"
 doi = "{doc['DOI']}"
 url_code = ""
 url_dataset = ""
