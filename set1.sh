@@ -17,6 +17,11 @@ dvc add "${DATASETPATH}/1"
 git add "${DATASETPATH}/0.dvc"
 git add "${DATASETPATH}/1.dvc"
 
+# re-train model
+python model/train.py
+dvc add "${DATASETPATH}/models"
+git add "${DATASETPATH}/models.dvc"
+
 # upload files to DVC remote repo
 dvc push
 
