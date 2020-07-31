@@ -34,11 +34,3 @@ set1-export.py \
 git -C ${SEROHUBPATH} add content/publication
 git -C ${SEROHUBPATH} commit -m "serohub publication update $(date +%F)"
 git -C ${SEROHUBPATH} push origin ${BRANCHNAME}
-
-
-# Windows Commands
-# python model/predict.py
-# Xcopy C:\prj\serohub-publication\data\set1\unlabelled C:\prj\serohub-publication\data\set1\predicted\unlabelled
-# set1-sync.py -d "data/set1/predicted"
-# set1-export.py -d "data/set1/predicted" -o data/tmp/export-examples
-
