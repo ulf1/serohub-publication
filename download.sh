@@ -15,7 +15,12 @@ git add "${RAWPATH}.dvc"
 
 # CrossRef (limit it to articles published today)
 RAWPATH="data/raw/crossref"
-crossref-download.py -o ${RAWPATH} -l 1000 -s 20.0 -f "$(date +%F)"
+#crossref-download.py -o ${RAWPATH} -l 1000 -s 20.0 -f "$(date +%F)"
+for OFFSET in {1..35}
+do
+    FROMDATE=$(date -j -v-${OFFSET}d +%F)
+    crossref-download.py -o ${RAWPATH} -l 1000 -s 20.0 -f ${FROMDATE}
+done
 dvc add ${RAWPATH}
 git add "${RAWPATH}.dvc"
 
