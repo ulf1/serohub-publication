@@ -70,10 +70,13 @@ git push
 
 ## Scripts
 
-### Download new raw files and update DVC
+### Run all
 ```bash
 source .venv/bin/activate
+dvc pull
 bash download.sh
+bash set1.sh
+bash export-predict.sh
 ```
 
 **Notes for Windows**
@@ -82,6 +85,7 @@ bash download.sh
 .venv\Scripts\activate.bat
 download.bat
 ```
+
 
 # Misc Notes
 

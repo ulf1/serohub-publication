@@ -4,6 +4,8 @@ from datetime import datetime as dt
 import os
 import json
 from serohub_publication.utils import  normalize_string
+# python3 -m spacy download en_core_web_sm
+import spacy
 import re
 from sklearn.model_selection import train_test_split
 
@@ -70,16 +72,74 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y)
 
 
+
 # FEATURIZATION
 
-# fixate vocabulary
-VOCAB = ['south', 'admitted', 'data', 'end', 'expected', 'number', 'studies', 'diagnostic', 'structure', 'impact', 'understand', 'increased', 'coronavirus sarscov', 'reproduction', 'method', 'ongoing', 'higher', 'measures', 'change', 'approach', 'specificity', 'background', 'major', 'secondary', 'admission', 'disease', 'asymptomatic', 'symptoms', 'changes', 'ci', 'detected', 'value', 'observed', 'pandemic', 'public', 'diagnosis', 'specific', 'rapid', 'given', 'parameters', 'covid infection', 'tests', 'effective', 'international', 'especially', 'association', 'setting', 'needed', 'future', 'taken', 'united states', 'simple', 'detection', 'efficacy', 'considered', 'early', 'understanding', 'syndrome coronavirus', 'values', 'immune', 'unknown', 'mean', 'compared', 'evaluate', 'development', 'identification', 'scenarios', 'cases covid', 'proportion', 'assessed', 'immunity', 'modeling', 'viral', 'followed', 'retrospective', 'economic', 'likely', 'low', 'related', 'state', 'weeks', 'small', 'need', 'strategies', 'implications', 'online', 'similar', 'italy', 'severe', 'average', 'workers', 'additional', 'crucial', 'used', 'quarantine', 'confirmed', 'type', 'analysis', 'systematic', 'severity', 'pneumonia', 'estimated', 'protective', 'isolation', 'emergency', 'objective', 'spike', 'uk', 'effectiveness', 'published', 'lockdown', 'basic', 'virus', 'caused', 'outbreak', 'developed', 'history', 'risk factors', 'demonstrated', 'design', 'city', 'identify', 'prior', 'large', 'april', 'control', 'recently', 'hospitals', 'hospitalization', 'respectively', 'months', 'cases', 'scale', 'burden', 'underlying', 'review', 'detect', 'models', 'symptom', 'possible', 'population', 'syndrome', 'people', 'genome', 'propose', 'spread covid', 'social distancing', 'mortality', 'significant', 'did', 'countries', 'patients', 'covid outbreak', 'mathematical', 'wuhan', 'epidemic', 'respiratory syndrome coronavirus', 'included', 'function', 'mild', 'growth', 'implemented', 'covid pandemic', 'hubei', 'risk', 'coronavirus', 'cells', 'care', 'robust', 'distancing', 'patient', 'ncov', 'evaluation', 'covid cases', 'positive', 'having', 'provide', 'outbreaks', 'modelling', 'ratio', 'status', 'determine', 'present', 'world', 'laboratory', 'provides', 'prevent', 'essential', 'molecular', 'test', 'potentially', 'report', 'initial', 'overall', 'community', 'strategy', 'intensive care', 'performance', 'current', 'performed', 'investigate', 'multiple', 'findings', 'lower', 'reduced', 'host', 'acid', 'prediction', 'local', 'conducted', 'therapeutic', 'national', 'key', 'ace', 'covid epidemic', 'second', 'proteins', 'interventions', 'various', 'effect', 'covid disease', 'total', 'vs', 'infectious', 'surveillance', 'distribution', 'outcomes', 'response', 'potential', 'respiratory syndrome', 'assessment', 'capacity', 'characteristics', 'cell', 'health', 'coronaviruses', 'better', 'outcome', 'diseases', 'screening', 'efforts', 'estimates', 'factors', 'deaths', 'incidence', 'acute respiratory syndrome', 'united', 'drug', 'fatality', 'expression', 'develop', 'prevention', 'disease covid']
+# define preprocessor
+# https://spacy.io/usage/spacy-101#annotations-pos-deps
+def emb_preprocessor(s):
+    # clean string
+    sent = normalize_string(s)
+    # Lemmatization
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(sent)
+    lemmas = [token.lemma_ for token in doc if token.tag_ in ('NNP', 'VBG', 'NN') and len(token.lemma_)>1]
+    return " ".join(lemmas)
+
+# Find VOCAB
+"""
+emb = TfidfVectorizer(
+    preprocessor=emb_preprocessor,
+    stop_words='english',  # ignore stopwords!
+    analyzer='word', ngram_range=(1, 2),  # single word or bigram
+    min_df = 3,  # lemma exist at least 3x times
+    norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=True)
+X_for_rf = emb.fit_transform(X_train)
+"""
+
+"""
+np.random.seed(42)
+X_for_rf2 = scipy.sparse.hstack([X_for_rf, np.random.random((X_for_rf.shape[0], 1))])
+X_for_rf2.shape
+
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(
+    n_estimators=512, min_samples_leaf=0.025, 
+    bootstrap=True, max_samples=0.7, oob_score=True, random_state=42, 
+    class_weight='balanced_subsample')
+clf.fit(X_for_rf2, y_train)
+
+feat_names = np.array(emb.get_feature_names() + ['OUR_RANDOM_VAR'])
+feat_score = clf.feature_importances_
+
+mask = feat_names == "OUR_RANDOM_VAR"
+mask2 = feat_score > feat_score[mask]
+VOCAB = list(feat_names[mask2])
+len(VOCAB)
+"""
+
+"""
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(
+    n_estimators=1024, min_samples_leaf=0.0125, 
+    bootstrap=True, max_samples=0.7, oob_score=True, random_state=42, 
+    class_weight='balanced_subsample')
+clf.fit(X_for_rf, y_train)
+
+feat_names = np.array(emb.get_feature_names())
+feat_score = clf.feature_importances_
+# idx = np.argsort(feat_score)
+# idx = np.flipud(idx)
+# feat_score[idx]
+# feat_names[idx[:1024]]
+VOCAB = list(feat_names[feat_score > 0])
+len(VOCAB)
+"""
+
+# fixed VOCAB
+VOCAB = ['ability', 'absence', 'access', 'accord', 'account', 'accuracy', 'ace2', 'acid', 'activity', 'addition', 'admission', 'age', 'agent', 'aim', 'air', 'analysis', 'antibody', 'application', 'approach', 'april', 'area', 'assay', 'assess', 'assessment', 'association', 'attention', 'background', 'basis', 'behavior', 'bind', 'blood', 'burden', 'capacity', 'care', 'care unit', 'case', 'case fatality', 'cause', 'cell', 'center', 'chain', 'challenge', 'change', 'chest', 'china', 'ci', 'city', 'cohort', 'cohort study', 'combination', 'community', 'compare', 'comparison', 'concern', 'conclusion', 'confidence', 'consider', 'contact', 'containment', 'context', 'contrast', 'control', 'coronavirus', 'coronavirus covid19', 'coronavirus disease', 'coronavirus sarscov2', 'correlation', 'cough', 'count', 'country', 'course', 'covid19', 'covid19 case', 'covid19 covid19', 'covid19 disease', 'covid19 epidemic', 'covid19 infection', 'covid19 mortality', 'covid19 outbreak', 'covid19 pandemic', 'covid19 sarscov2', 'covid19 study', 'covid19 use', 'crisis', 'ct', 'curve', 'data', 'database', 'dataset', 'date', 'day', 'death', 'december', 'decrease', 'demand', 'design', 'detection', 'detection sarscov2', 'develop', 'development', 'diabetes', 'diagnosis', 'difference', 'discussion', 'disease', 'disease covid19', 'disease severity', 'distance', 'distancing', 'distress', 'distribution', 'domain', 'drug', 'duration', 'effect', 'effectiveness', 'efficacy', 'emerge', 'emergence', 'emergency', 'end', 'entry', 'epidemic', 'equipment', 'estimate', 'estimation', 'europe', 'evaluation', 'evidence', 'evolution', 'exist', 'experience', 'exposure', 'expression', 'extent', 'factor', 'failure', 'fatality', 'february', 'fever', 'follow', 'forecast', 'framework', 'france', 'function', 'ge', 'gene', 'genome', 'germany', 'government', 'group', 'growth', 'health', 'health care', 'healthcare', 'heterogeneity', 'history', 'home', 'hospital', 'hospitalization', 'host', 'hubei', 'hubei province', 'hypertension', 'icu', 'identification', 'identify', 'igg', 'illness', 'immunity', 'impact', 'implementation', 'importance', 'incidence', 'include', 'increase', 'incubation', 'index', 'india', 'indicate', 'infection', 'information', 'interaction', 'interpretation', 'interval', 'intervention', 'introduction', 'investigation', 'isolation', 'italy', 'january', 'june', 'knowledge', 'laboratory', 'lack', 'lead', 'level', 'life', 'limit', 'literature', 'lockdown', 'lung', 'majority', 'make', 'management', 'march', 'mean', 'measure', 'mechanism', 'metaanalysis', 'method', 'mitigation', 'mobility', 'model', 'model covid19', 'modeling', 'modelling', 'mortality', 'mortality covid19', 'need', 'network', 'new', 'new york', 'novel', 'number', 'number covid19', 'objective', 'onset', 'order', 'organization', 'outbreak', 'outbreak coronavirus', 'outcome', 'pandemic', 'paper', 'parameter', 'patient', 'pattern', 'pcr', 'peak', 'percentage', 'performance', 'period', 'phase', 'place', 'plasma', 'pneumonia', 'point', 'policy', 'polymerase', 'population', 'potential', 'predict', 'prediction', 'presence', 'prevalence', 'prevention', 'probability', 'process', 'progression', 'proportion', 'protection', 'protein', 'protocol', 'province', 'public', 'pubmed', 'quality', 'quarantine', 'r0', 'range', 'rate', 'ratio', 'rbd', 'reaction', 'receptor', 'recovery', 'reduce', 'reduction', 'reference', 'regard', 'region', 'regression', 'relationship', 'replication', 'report', 'reproduction', 'reproduction number', 'research', 'resource', 'response', 'result', 'review', 'risk', 'risk covid19', 'rna', 'role', 'rtpcr', 'safety', 'sample', 'sars', 'sarscov', 'sarscov2', 'sarscov2 covid19', 'sarscov2 infection', 'sarscov2 pandemic', 'sarscov2 rna', 'sarscov2 spike', 'sarscov2 virus', 'scale', 'scenario', 'score', 'screening', 'search', 'selection', 'sensitivity', 'sensitivity specificity', 'sequence', 'sequencing', 'series', 'serum', 'set', 'severity', 'sex', 'sir', 'situation', 'size', 'source', 'south', 'spain', 'specificity', 'spike', 'spike protein', 'spread', 'spread covid19', 'staff', 'stage', 'start', 'state', 'states', 'status', 'strategy', 'structure', 'study', 'study covid19', 'suggest', 'support', 'surface', 'surveillance', 'survey', 'swab', 'symptom', 'syndrome', 'syndrome coronavirus', 'target', 'temperature', 'test', 'testing', 'therapy', 'threat', 'time', 'tool', 'total', 'transmission', 'travel', 'treatment', 'trend', 'type', 'uk', 'underlie', 'understand', 'understanding', 'unit', 'united', 'united states', 'university', 'usa', 'use', 'vaccine', 'validation', 'value', 'variation', 'ventilation', 'viral', 'virus', 'wave', 'way', 'week', 'work', 'world', 'world health', 'wuhan', 'wuhan china']
 print(f"[INFO] {dt.now()}: Using a fixed vocabulary with '{len(VOCAB)}' words/ngrams.")
 
-# define preprocessor
-def emb_preprocessor(s):
-    s = normalize_string(s)
-    return re.sub(r'[0-9]', r'', s)
 
 # Word Embedding with fixed VOCAB
 emb = TfidfVectorizer(
