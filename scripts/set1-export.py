@@ -44,18 +44,22 @@ if __name__ == "__main__":
 
                 # process depending on the raw data source
                 frontmatter_content = None
+                doc = None
                 if RAWSRC in ("biorxiv", "crossref"):
                     doc_filepath = os.path.join(
                         args.RAWDATAPATH, RAWSRC, FILENAME)
-                    with open(doc_filepath, "r") as fptr2:
-                        doc = json.load(fptr2)
+                    if os.path.isfile(doc_filepath):
+                        with open(doc_filepath, "r") as fptr2:
+                            doc = json.load(fptr2)
                 # generate and save front matter
-                if RAWSRC == "biorxiv":
-                    frontmatter_content = sp_biorxiv.to_front_matter(doc)
-                elif RAWSRC == "crossref":
-                    frontmatter_content = sp_crossref.to_front_matter(doc)
-                else:
-                    print(f"[INFO] {dt.now()}: Cannot find '{RAWSRC}' source")
+                frontmatter_content = None
+                if doc:
+                    if RAWSRC == "biorxiv":
+                        frontmatter_content = sp_biorxiv.to_front_matter(doc)
+                    elif RAWSRC == "crossref":
+                        frontmatter_content = sp_crossref.to_front_matter(doc)
+                    else:
+                        print(f"[INFO] {dt.now()}: Cannot find '{RAWSRC}' source")
 
                 if frontmatter_content:
                     frontmatter_filepath = os.path.join(
