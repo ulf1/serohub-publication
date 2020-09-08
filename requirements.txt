@@ -5,4 +5,5 @@ flake8==3.8.*
 dvc==1.1.*
 pydrive2==1.4.*
 habanero==0.7.*
-scikit_learn==0.23.*
+scikit_learn==0.23.1
+spacy==2.3.2

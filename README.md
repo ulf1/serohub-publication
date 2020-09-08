@@ -24,6 +24,7 @@ source .venv/bin/activate
 
 # install this python package
 pip install -r requirements.txt
+python -m spacy download en_core_web_sm
 python setup.py install
 
 # download versionened datasets (dvc)
